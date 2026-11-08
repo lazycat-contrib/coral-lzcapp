@@ -2,38 +2,3 @@ manifest: ./lzc-manifest.yml
 pkgout: ./dist
 icon: ./icon.png
 contentdir: ./content
-images:
-  - id: talk
-    target: service
-    service: talk
-    source: coralproject/talk
-    channel: stable
-    sort: semver
-    tag_regex: ^v?[0-9]+[.][0-9]+[.][0-9]+$
-    delivery:
-      mode: mirror
-      require_digest_match: true
-  - id: mongo
-    target: service
-    service: mongo
-    source: library/mongo
-    channel: custom
-    sort: semver
-    tag_regex: ^8[.]0[.][0-9]+$
-    version_regex: ^(?P<version>8[.]0[.][0-9]+)$
-    version_template: "{version}"
-    delivery:
-      mode: mirror
-      require_digest_match: true
-  - id: redis
-    target: service
-    service: redis
-    source: library/redis
-    channel: custom
-    sort: semver
-    tag_regex: ^7[.]2[.][0-9]+$
-    version_regex: ^(?P<version>7[.]2[.][0-9]+)$
-    version_template: "{version}"
-    delivery:
-      mode: mirror
-      require_digest_match: true
