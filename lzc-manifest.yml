@@ -11,10 +11,9 @@ application:
       backend: file:///lzcapp/pkg/content/licenses/
     - location: /
       backend: http://talk:5000/
-
 services:
   talk:
-    # upstream: coralproject/talk:9.11.9 (Docker Hub official)
+    # upstream: coralproject/talk:9.11.9
     image: docker.1ms.run/coralproject/talk:9.11.9
     environment:
       - MONGODB_URI=mongodb://mongo:27017/coral
@@ -26,14 +25,12 @@ services:
       - redis
     binds:
       - /lzcapp/var/mutdata/coral:/lzcapp/var/data
-
   mongo:
     image: docker.1ms.run/library/mongo:8.0.3
     environment:
       - TZ=Asia/Shanghai
     binds:
       - /lzcapp/var/mutdata/mongo:/data/db
-
   redis:
     image: docker.1ms.run/library/redis:7.2.5
     binds:
