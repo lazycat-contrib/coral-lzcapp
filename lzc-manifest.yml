@@ -1,0 +1,56 @@
+application:
+  subdomain: coral
+  multi_instance: false
+  # Coral ships an install wizard at /admin that creates the first admin
+  # account on first run (self-service, official docs "Installation" page),
+  # so public_path is safe (papra/servas precedent, 2026-11-06).
+  public_path:
+    - /
+  upstreams:
+    - location: /package-licenses/
+      backend: file:///lzcapp/pkg/content/licenses/
+    - location: /
+      backend: http://talk:5000/
+
+services:
+  talk:
+    # upstream: coralproject/talk:9.11.9 (Docker Hub official)
+    image: docker.1ms.run/coralproject/talk:9.11.9
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/coral
+      - REDIS_URI=redis://redis:6379
+      - SIGNING_SECRET={{ printf "%x" (stable_secret "coral_signing") }}
+      - TZ=Asia/Shanghai
+    depends_on:
+      - mongo
+      - redis
+    binds:
+      - /lzcapp/var/mutdata/coral:/lzcapp/var/data
+
+  mongo:
+    image: docker.1ms.run/library/mongo:8.0.3
+    environment:
+      - TZ=Asia/Shanghai
+    binds:
+      - /lzcapp/var/mutdata/mongo:/data/db
+
+  redis:
+    image: docker.1ms.run/library/redis:7.2.5
+    binds:
+      - /lzcapp/var/mutdata/redis:/data
+usage: |
+  Coral 是 Vox Media 开发的现代评论系统（Apache-2.0），可为静态网站/博客添加
+  带审核与身份管理的讨论区，数据保存在本机 MongoDB。
+
+  使用方法：
+  1. 首次打开应用会进入安装向导（/admin），自助创建第一个管理员账号。
+  2. 在管理后台创建站点（tenant），将生成的嵌入代码（<script>）粘贴到你的网站即可。
+  3. 读者评论走站点嵌入页；管理员审核与设置在 /admin。
+
+  说明：
+  - 首次安装通过网页向导完成，支持自助建号，因此使用 public_path 直接对外开放，
+    由应用自身登录页鉴权。
+  - SIGNING_SECRET 由部署系统注入固定随机值，容器重建后会话不失效。
+  - 数据保存在 /lzcapp/var/mutdata（MongoDB + Redis），卸载会一并删除。
+  - 本包未做实机验证，功能以官方文档为准：https://docs.coralproject.net/
+  - 许可证 Apache-2.0，随包分发，见 /package-licenses/。

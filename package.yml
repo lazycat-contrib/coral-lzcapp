@@ -1,0 +1,18 @@
+package: community.lazycat.app.coral
+name: Coral
+version: 9.11.9
+description: "Modern comment platform by Vox Media: add moderated discussions to any website while keeping your data."
+min_os_version: "1.5.0"
+homepage: https://coralproject.net
+author: Vox Media
+license: "Apache-2.0"
+permissions:
+  required:
+    - net.internet
+locales:
+  zh:
+    name: Coral
+    description: "Vox Media 出品的现代评论系统：为任何网站添加带审核机制的讨论区，数据完全自持。"
+  en:
+    name: Coral
+    description: "Modern commenting platform by Vox Media: add moderated discussions to any website while keeping your data."
